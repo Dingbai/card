@@ -37,6 +37,30 @@ export function createMcpServer() {
 export function createApp() {
   const app = express();
   app.use(express.json({ limit: "256kb" }));
+  app.get("/", (_request, response) => {
+    response.type("html").send(`<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>英语复习卡片 · ChatGPT App</title>
+  <style>
+    :root{color-scheme:light dark;font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f7fb;color:#172033}*{box-sizing:border-box}body{min-height:100vh;margin:0;display:grid;place-items:center;padding:24px;background:linear-gradient(145deg,#eef2ff,#f9fbff)}main{width:min(680px,100%);padding:32px;border:1px solid #dce2ee;border-radius:20px;background:#fff;box-shadow:0 18px 48px rgba(35,52,90,.12)}.label{margin:0 0 10px;color:#315cff;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}h1{margin:0;font-size:clamp(28px,6vw,42px)}p{color:#5e687c;line-height:1.7}.status{display:flex;align-items:center;gap:9px;margin:24px 0}.dot{width:10px;height:10px;border-radius:50%;background:#20a464;box-shadow:0 0 0 5px #e2f7eb}code{display:block;overflow-wrap:anywhere;padding:14px;border-radius:12px;background:#f1f4ff;color:#25304a}a{color:#315cff}@media(prefers-color-scheme:dark){:root{background:#11141c;color:#eef2ff}body{background:linear-gradient(145deg,#11141c,#1c2233)}main{border-color:#343948;background:#171a23;box-shadow:none}p{color:#b4bdd1}code{background:#242c49;color:#eef2ff}.dot{box-shadow:0 0 0 5px #173428}}
+  </style>
+</head>
+<body>
+  <main>
+    <p class="label">Private ChatGPT App</p>
+    <h1>英语复习卡片</h1>
+    <div class="status"><span class="dot" aria-hidden="true"></span><strong>MCP 服务运行中</strong></div>
+    <p>这个页面用于确认服务已经成功部署。学习卡片需要在 ChatGPT 中连接 MCP 地址后使用，不会直接显示在普通浏览器首页。</p>
+    <p><strong>ChatGPT MCP 地址</strong></p>
+    <code>https://chatgpt-app-ashy.vercel.app/api/mcp</code>
+    <p><a href="/api/health">查看健康检查</a></p>
+  </main>
+</body>
+</html>`);
+  });
   app.post(["/mcp", "/api/mcp"], async (request, response) => {
     const server = createMcpServer();
     const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });
