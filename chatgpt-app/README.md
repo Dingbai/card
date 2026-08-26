@@ -19,14 +19,14 @@ npm test
 npm start
 ```
 
-MCP 端点为 `http://localhost:8787/mcp`，健康检查端点为 `http://localhost:8787/health`。
+MCP 端点为 `http://localhost:8787/mcp`，健康检查端点为 `http://localhost:8787/health`。部署到 Vercel 后对应地址为 `/api/mcp` 和 `/api/health`。
 
 ## 私有部署
 
-1. 使用项目自带的 `Dockerfile`，将本目录部署到支持容器的托管服务。
-2. 配置托管服务，通过 HTTPS 暴露平台分配的 `PORT`。
-3. 确认访问 `https://你的域名/health` 时返回 `{ "ok": true }`。
-4. 在 ChatGPT 开发者模式中添加私有远程 MCP App，地址填写 `https://你的域名/mcp`。
+1. 在 Vercel 中导入 GitHub 仓库，并将 Root Directory 设置为 `chatgpt-app`。
+2. 保持 Framework Preset 为 Other，不需要配置环境变量。
+3. 确认访问 `https://你的域名/api/health` 时返回 `{ "ok": true }`。
+4. 在 ChatGPT 开发者模式中添加私有远程 MCP App，地址填写 `https://你的域名/api/mcp`。
 5. 在 ChatGPT 中开始英语学习对话；学完后，要求 ChatGPT 根据本次对话生成英语复习卡片。
 
 当前 MCP 端点没有应用层身份认证。原型阶段应仅在自己的 ChatGPT 账号中保留该连接，并使用难以猜测的部署地址。向其他用户开放前，应增加 OAuth 认证。
@@ -54,14 +54,14 @@ npm test
 npm start
 ```
 
-The MCP endpoint is `http://localhost:8787/mcp` and the health endpoint is `http://localhost:8787/health`.
+The MCP endpoint is `http://localhost:8787/mcp` and the health endpoint is `http://localhost:8787/health`. On Vercel, the corresponding paths are `/api/mcp` and `/api/health`.
 
 ## Deploy privately
 
-1. Deploy this directory to a container host using the included `Dockerfile`.
-2. Configure the host to expose its assigned `PORT` over HTTPS.
-3. Confirm `https://YOUR_DOMAIN/health` returns `{ "ok": true }`.
-4. In ChatGPT developer mode, add a private remote MCP app with the URL `https://YOUR_DOMAIN/mcp`.
+1. Import the GitHub repository in Vercel and set the Root Directory to `chatgpt-app`.
+2. Keep the Framework Preset set to Other; no environment variables are required.
+3. Confirm `https://YOUR_DOMAIN/api/health` returns `{ "ok": true }`.
+4. In ChatGPT developer mode, add a private remote MCP app with the URL `https://YOUR_DOMAIN/api/mcp`.
 5. Start an English-learning conversation. When finished, ask ChatGPT to create the English review card from the material covered in that conversation.
 
 The MCP endpoint has no application-level authentication. Keep the connector private in ChatGPT and use a hard-to-guess deployment URL for the prototype. Add OAuth before sharing the endpoint with other users.
