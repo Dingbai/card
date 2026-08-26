@@ -1,0 +1,7 @@
+.DS_Store
+**/.DS_Store
+**/__pycache__/
+*.py[cod]
+chatgpt-app/node_modules/
+chatgpt-app/dist/
+chatgpt-app/.env

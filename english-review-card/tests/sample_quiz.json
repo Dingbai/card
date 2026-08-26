@@ -1,0 +1,53 @@
+{
+  "title": "Today's English Review",
+  "source_summary": "Present perfect, travel vocabulary, and polite requests",
+  "questions": [
+    {
+      "id": "q1",
+      "type": "multiple_choice",
+      "knowledge_point": "past simple",
+      "prompt": "Choose the correct sentence.",
+      "options": ["I have seen her yesterday.", "I saw her yesterday."],
+      "accepted_answers": ["I saw her yesterday."],
+      "explanation_en": "Use the past simple with a finished time such as yesterday.",
+      "explanation_zh": "和 yesterday 这类已结束时间连用时，使用一般过去时。"
+    },
+    {
+      "id": "q2",
+      "type": "fill_in",
+      "knowledge_point": "present perfect",
+      "prompt": "I ___ already finished my homework.",
+      "accepted_answers": ["have", "'ve"],
+      "explanation_en": "The present perfect uses have plus a past participle.",
+      "explanation_zh": "现在完成时由 have 加过去分词构成。"
+    },
+    {
+      "id": "q3",
+      "type": "short_answer",
+      "knowledge_point": "polite requests",
+      "prompt": "Ask someone politely to open the window.",
+      "accepted_answers": ["Could you open the window?", "Would you open the window?"],
+      "explanation_en": "Could you and would you are both polite request forms.",
+      "explanation_zh": "Could you 和 would you 都可以构成礼貌请求。"
+    },
+    {
+      "id": "q4",
+      "type": "multiple_choice",
+      "knowledge_point": "travel vocabulary",
+      "prompt": "Where do you collect a checked suitcase after a flight?",
+      "options": ["Baggage claim", "Boarding gate", "Check-in desk"],
+      "accepted_answers": ["Baggage claim"],
+      "explanation_en": "Baggage claim is the area where arriving passengers collect luggage.",
+      "explanation_zh": "Baggage claim 是抵达旅客领取托运行李的区域。"
+    },
+    {
+      "id": "q5",
+      "type": "fill_in",
+      "knowledge_point": "past participles",
+      "prompt": "She has ___ to London, so she is not here now.",
+      "accepted_answers": ["gone"],
+      "explanation_en": "Gone is the past participle of go and means she is still away.",
+      "explanation_zh": "Gone 是 go 的过去分词，并表示她现在仍未回来。"
+    }
+  ]
+}
