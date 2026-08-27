@@ -7,7 +7,7 @@ import { widgetHtml } from "./widget.js";
 
 if (!globalThis.crypto) Object.defineProperty(globalThis, "crypto", { value: webcrypto });
 
-const RESOURCE_URI = "ui://widget/english-review-card-v0.3.0.html";
+const RESOURCE_URI = "ui://widget/english-review-card-v0.3.1.html";
 const WIDGET_DOMAIN = "https://chatgpt-app-ashy.vercel.app";
 const WIDGET_CSP = {
   connectDomains: [],
@@ -15,7 +15,7 @@ const WIDGET_CSP = {
 };
 
 export function createMcpServer() {
-  const server = new McpServer({ name: "english-review-card", version: "0.3.0" });
+  const server = new McpServer({ name: "english-review-card", version: "0.3.1" });
   server.registerResource("english-review-card", RESOURCE_URI, {}, async () => ({
     contents: [{ uri: RESOURCE_URI, mimeType: "text/html+skybridge", text: widgetHtml, _meta: {
       ui: {
@@ -34,7 +34,7 @@ export function createMcpServer() {
   }));
   server.registerTool("create_english_review_card", {
     title: "Create English review card",
-    description: "Create exactly one interactive English review card containing 1–20 questions grounded only in the current conversation. Make exactly one tool call per requested card and put every requested question in this call's questions array; never split one card across multiple tool calls. For example, a ten-question request is one call whose questions array has ten items. Honor the requested count and question types. Default to five mixed questions only when no preferences were provided. If the conversation lacks enough material, do not call this tool; ask for more study content instead.",
+    description: "Create exactly one interactive English review card containing at least 5 questions grounded only in the current conversation. There is no maximum question count. Make exactly one tool call per requested card and put every requested question in this call's questions array; never split one card across multiple tool calls. For example, a ten-question request is one call whose questions array has ten items. Honor the requested count and question types. Default to five mixed questions only when no preferences were provided. If the conversation lacks enough material, do not call this tool; ask for more study content instead.",
     inputSchema: quizSchema,
     outputSchema: quizSchema,
     _meta: {

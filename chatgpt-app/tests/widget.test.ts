@@ -20,6 +20,6 @@ test("follow-up explicitly requests a new single card", () => {
 });
 
 test("uses a versioned template URI to avoid stale widget caches", () => {
-  assert.match(appSource, /english-review-card-v0\.3\.0\.html/);
+  assert.match(appSource, /english-review-card-v0\.3\.1\.html/);
   assert.match(appSource, /ui: \{ resourceUri: RESOURCE_URI \}/);
 });

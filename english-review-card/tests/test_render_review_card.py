@@ -38,15 +38,15 @@ class QuizTests(unittest.TestCase):
 
     def test_accepts_a_configured_question_count_and_single_type(self):
         data = sample_quiz()
-        data["questions"] = [data["questions"][1]]
-        output = render_fragment(validate_quiz(data))
-        self.assertIn("1 questions", output)
-
-    def test_rejects_more_than_twenty_questions(self):
-        data = sample_quiz()
         template = data["questions"][1]
         data["questions"] = [{**template, "id": f"q{index}"} for index in range(21)]
-        with self.assertRaisesRegex(ValueError, "1–20"):
+        output = render_fragment(validate_quiz(data))
+        self.assertIn("21 questions", output)
+
+    def test_rejects_fewer_than_five_questions(self):
+        data = sample_quiz()
+        data["questions"] = data["questions"][:4]
+        with self.assertRaisesRegex(ValueError, "at least 5"):
             validate_quiz(data)
 
     def test_escapes_script_breakout(self):

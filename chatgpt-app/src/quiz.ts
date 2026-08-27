@@ -38,7 +38,7 @@ export const quizSchema = z
   .object({
     title: z.string().trim().min(1).max(120),
     source_summary: z.string().trim().min(1).max(500),
-    questions: z.array(questionSchema).min(1).max(20),
+    questions: z.array(questionSchema).min(5),
   })
   .superRefine((quiz, context) => {
     const ids = quiz.questions.map((question) => question.id);

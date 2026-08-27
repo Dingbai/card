@@ -31,12 +31,18 @@ test("accepts a configured single-type quiz", () => {
   assert.equal(quizSchema.parse(quiz).questions.length, 10);
 });
 
-test("rejects more than twenty questions", () => {
+test("accepts more than twenty questions", () => {
   const quiz = sampleQuiz();
   quiz.questions = Array.from({ length: 21 }, (_, index) => ({
     ...quiz.questions[1],
     id: `fill-${index + 1}`,
   }));
+  assert.equal(quizSchema.parse(quiz).questions.length, 21);
+});
+
+test("rejects fewer than five questions", () => {
+  const quiz = sampleQuiz();
+  quiz.questions = quiz.questions.slice(0, 4);
   assert.equal(quizSchema.safeParse(quiz).success, false);
 });
 
