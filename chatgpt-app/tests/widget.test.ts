@@ -10,7 +10,7 @@ test("renders all questions in one variable-length card", () => {
   assert.match(widget, /state\.index<quiz\.questions\.length/);
   assert.match(widget, /const total=quiz\.questions\.length/);
   assert.doesNotMatch(widget, /state\.index<5/);
-  assert.match(appSource, /never split one card across multiple tool calls/);
+  assert.match(appSource, /Put every requested question in this single call/);
 });
 
 test("follow-up explicitly requests a new single card", () => {
@@ -20,10 +20,26 @@ test("follow-up explicitly requests a new single card", () => {
 });
 
 test("uses a versioned template URI to avoid stale widget caches", () => {
-  assert.match(appSource, /APP_VERSION = "0\.4\.1"/);
+  assert.match(appSource, /APP_VERSION = "0\.5\.0"/);
   assert.match(appSource, /english-review-card-v\$\{APP_VERSION\}\.html/);
   assert.match(appSource, /ui: \{ resourceUri: RESOURCE_URI \}/);
-  assert.match(widget, /Daily English Review · v0\.4\.1/);
+  assert.match(widget, /Daily English Review · v0\.5\.0/);
+});
+
+test("persists and restores the quiz and answer progress", () => {
+  assert.match(widget, /setWidgetState\(\{\.\.\.previous,quiz,quizId,progress:/);
+  assert.match(widget, /widgetState\?\.quiz/);
+  assert.match(widget, /saved\?\.quizId===quizId&&saved\.progress/);
+  assert.match(widget, /state\.answers\[state\.index\]=result/);
+  assert.doesNotMatch(appSource, /ephemeral:\s*true/);
+});
+
+test("records server and widget timing diagnostics", () => {
+  assert.match(appSource, /console\.info\("mcp_request"/);
+  assert.match(appSource, /initMs:/);
+  assert.match(appSource, /mcpMs:/);
+  assert.match(widget, /english_review_card_ready/);
+  assert.match(widget, /widgetBootMs:/);
 });
 
 test("submits update requests through the supported follow-up signature", () => {

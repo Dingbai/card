@@ -7,7 +7,7 @@ import { widgetHtml } from "./widget.js";
 
 if (!globalThis.crypto) Object.defineProperty(globalThis, "crypto", { value: webcrypto });
 
-export const APP_VERSION = "0.4.1";
+export const APP_VERSION = "0.5.0";
 const RESOURCE_URI = `ui://widget/english-review-card-v${APP_VERSION}.html`;
 const WIDGET_DOMAIN = "https://chatgpt-app-ashy.vercel.app";
 const WIDGET_CSP = {
@@ -35,7 +35,7 @@ export function createMcpServer() {
   }));
   server.registerTool("create_english_review_card", {
     title: "Create English review card",
-    description: "Create exactly one interactive English review card containing at least 5 questions grounded only in the current conversation. There is no maximum question count. Make exactly one tool call per requested card and put every requested question in this call's questions array; never split one card across multiple tool calls. For example, a ten-question request is one call whose questions array has ten items. Honor the requested count and question types. Default to five mixed questions only when no preferences were provided. If the conversation lacks enough material, do not call this tool; ask for more study content instead.",
+    description: "Create one interactive English review card grounded only in the current conversation. Put every requested question in this single call (minimum 5; default to 5 mixed questions), honor the requested count and types, and keep each English and Chinese explanation to one concise sentence. If there is not enough study material, ask for more instead of calling the tool.",
     inputSchema: quizSchema,
     outputSchema: quizSchema,
     _meta: {
@@ -47,7 +47,6 @@ export function createMcpServer() {
   }, async (quiz) => ({
     content: [{ type: "text", text: `The ${quiz.questions.length}-question English review card is ready.` }],
     structuredContent: quiz,
-    _meta: { ephemeral: true },
   }));
   return server;
 }
@@ -80,11 +79,20 @@ export function createApp() {
 </html>`);
   });
   app.post(["/mcp", "/api/mcp"], async (request, response) => {
+    const startedAt = performance.now();
     const server = createMcpServer();
     const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });
     try {
+      const initializedAt = performance.now();
       await server.connect(transport);
       await transport.handleRequest(request, response, request.body);
+      const completedAt = performance.now();
+      console.info("mcp_request", {
+        method: request.body?.method ?? "unknown",
+        initMs: Math.round(initializedAt - startedAt),
+        mcpMs: Math.round(completedAt - initializedAt),
+        totalMs: Math.round(completedAt - startedAt),
+      });
     } catch (error) {
       console.error(error);
       if (!response.headersSent) response.status(500).json({ jsonrpc: "2.0", error: { code: -32603, message: "Internal server error" }, id: null });

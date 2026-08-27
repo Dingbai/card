@@ -6,8 +6,9 @@
 
 - ChatGPT 根据当前对话中实际学习过的内容生成 5 道题，并调用 `create_english_review_card`。
 - MCP 服务严格校验题目结构，然后以结构化内容返回题目。
-- 交互组件在客户端完成答题、双语解析、成绩统计和错题复练。
+- 交互组件在客户端完成答题、双语解析、成绩统计和错题复练，并通过组件状态恢复当前卡片和答题进度。
 - 服务端不持久化答题结果，也不需要配置 OpenAI API Key。
+- MCP 请求会输出 `mcp_request` 结构化耗时日志；组件控制台会输出 `english_review_card_ready` 启动与恢复耗时。
 
 ## 本地运行
 
@@ -41,8 +42,9 @@ This directory contains a remote MCP server and an Apps SDK widget. It is separa
 
 - ChatGPT creates five questions from material in the current conversation and calls `create_english_review_card`.
 - The MCP server validates the quiz and returns it as structured content.
-- The widget handles answers, bilingual feedback, scoring, and follow-up rounds locally.
-- No quiz results are persisted and no OpenAI API key is required by the server.
+- The widget handles answers, bilingual feedback, scoring, and follow-up rounds locally, and restores the current card and progress from widget state.
+- No quiz results are persisted on the server, and no OpenAI API key is required by the server.
+- MCP requests emit structured `mcp_request` timing logs; the widget console emits `english_review_card_ready` boot and restore timing.
 
 ## Run locally
 
