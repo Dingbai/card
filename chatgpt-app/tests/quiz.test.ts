@@ -40,10 +40,25 @@ test("accepts more than twenty questions", () => {
   assert.equal(quizSchema.parse(quiz).questions.length, 21);
 });
 
-test("rejects fewer than five questions", () => {
+test("accepts one question and rejects an empty quiz", () => {
   const quiz = sampleQuiz();
-  quiz.questions = quiz.questions.slice(0, 4);
+  quiz.questions = quiz.questions.slice(0, 1);
+  assert.equal(quizSchema.parse(quiz).questions.length, 1);
+  quiz.questions = [];
   assert.equal(quizSchema.safeParse(quiz).success, false);
+});
+
+test("publishes no maximum question count in JSON Schema", () => {
+  const jsonSchema = quizSchema.toJSONSchema() as any;
+  const questions = jsonSchema.properties.questions;
+  assert.equal(questions.minItems, 1);
+  assert.equal("maxItems" in questions, false);
+});
+
+test("accepts the optional end-to-end timing marker", () => {
+  const quiz = sampleQuiz();
+  const parsed = quizSchema.parse({ ...quiz, request_started_at_ms: 1787832000000 });
+  assert.equal(parsed.request_started_at_ms, 1787832000000);
 });
 
 test("rejects an answer that does not match a multiple-choice option", () => {

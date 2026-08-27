@@ -34,7 +34,10 @@ class QuizTests(unittest.TestCase):
         self.assertIn("更新卡片", output)
         self.assertIn("data-setting-count", output)
         self.assertIn("data-setting-type", output)
-        self.assertIn("Daily English Review · v0.4.1", output)
+        self.assertIn("至少 1 题，无上限", output)
+        self.assertIn("request_started_at_ms", output)
+        self.assertIn("本次生成", output)
+        self.assertIn("Daily English Review · v0.6.0", output)
         self.assertIn("scrollToBottom:true", output)
         self.assertNotIn("prompt,title", output)
         self.assertNotIn("<html", output.lower())
@@ -46,11 +49,18 @@ class QuizTests(unittest.TestCase):
         output = render_fragment(validate_quiz(data))
         self.assertIn("21 questions", output)
 
-    def test_rejects_fewer_than_five_questions(self):
+    def test_accepts_one_question_and_rejects_an_empty_quiz(self):
         data = sample_quiz()
-        data["questions"] = data["questions"][:4]
-        with self.assertRaisesRegex(ValueError, "at least 5"):
+        data["questions"] = data["questions"][:1]
+        self.assertEqual(len(validate_quiz(data)["questions"]), 1)
+        data["questions"] = []
+        with self.assertRaisesRegex(ValueError, "at least 1"):
             validate_quiz(data)
+
+    def test_accepts_request_timing_marker(self):
+        data = sample_quiz()
+        data["request_started_at_ms"] = 1787832000000
+        self.assertEqual(validate_quiz(data)["request_started_at_ms"], 1787832000000)
 
     def test_escapes_script_breakout(self):
         data = sample_quiz()

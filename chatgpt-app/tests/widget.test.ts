@@ -10,20 +10,22 @@ test("renders all questions in one variable-length card", () => {
   assert.match(widget, /state\.index<quiz\.questions\.length/);
   assert.match(widget, /const total=quiz\.questions\.length/);
   assert.doesNotMatch(widget, /state\.index<5/);
-  assert.match(appSource, /Put every requested question in this single call/);
+  assert.match(appSource, /no maximum count/);
 });
 
 test("follow-up explicitly requests a new single card", () => {
-  assert.match(widget, /请立即调用 create_english_review_card 工具一次/);
+  assert.match(widget, /请立即调用 create_english_review_card_v2 工具一次/);
   assert.match(widget, /questions 数组必须包含全部/);
+  assert.match(widget, /没有最大题数限制/);
   assert.match(widget, /不要只回复文字/);
 });
 
 test("uses a versioned template URI to avoid stale widget caches", () => {
-  assert.match(appSource, /APP_VERSION = "0\.5\.0"/);
+  assert.match(appSource, /APP_VERSION = "0\.6\.0"/);
+  assert.match(appSource, /TOOL_NAME = "create_english_review_card_v2"/);
   assert.match(appSource, /english-review-card-v\$\{APP_VERSION\}\.html/);
   assert.match(appSource, /ui: \{ resourceUri: RESOURCE_URI \}/);
-  assert.match(widget, /Daily English Review · v0\.5\.0/);
+  assert.match(widget, /Daily English Review · v0\.6\.0/);
 });
 
 test("persists and restores the quiz and answer progress", () => {
@@ -40,6 +42,15 @@ test("records server and widget timing diagnostics", () => {
   assert.match(appSource, /mcpMs:/);
   assert.match(widget, /english_review_card_ready/);
   assert.match(widget, /widgetBootMs:/);
+  assert.match(widget, /本次生成/);
+  assert.match(widget, /request_started_at_ms/);
+});
+
+test("allows any positive question count with no maximum", () => {
+  assert.match(widget, /题目数量（至少 1 题，无上限）/);
+  assert.match(widget, /type="number" min="1"/);
+  assert.match(widget, /Math\.max\(1,/);
+  assert.doesNotMatch(widget, /min="5"/);
 });
 
 test("submits update requests through the supported follow-up signature", () => {

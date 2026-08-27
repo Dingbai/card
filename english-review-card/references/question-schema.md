@@ -6,6 +6,7 @@ Create UTF-8 JSON with this shape:
 {
   "title": "Today's English Review",
   "source_summary": "A short description of the material covered",
+  "request_started_at_ms": 1787832000000,
   "questions": [
     {
       "id": "q1",
@@ -24,7 +25,8 @@ Create UTF-8 JSON with this shape:
 ## Requirements
 
 - `title`, `source_summary`, and every string must be non-empty.
-- `questions` must contain at least 5 items with unique `id` values. There is no maximum count. Default to five unless the user requested another count.
+- `request_started_at_ms` is optional. Include it only when a card-generated follow-up supplies the exact value, so the replacement card can measure end-to-end generation time.
+- `questions` must contain at least 1 item with unique `id` values. There is no maximum count. Default to five unless the user requested another positive count.
 - `type` must be `multiple_choice`, `fill_in`, or `short_answer`.
 - Every question needs `knowledge_point`, `prompt`, at least one `accepted_answers` value, `explanation_en`, and `explanation_zh`.
 - Multiple-choice questions need 2–6 unique `options`; an accepted answer must equal one option exactly.

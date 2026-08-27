@@ -4,11 +4,12 @@
 
 ## 功能
 
-- ChatGPT 根据当前对话中实际学习过的内容生成 5 道题，并调用 `create_english_review_card`。
+- ChatGPT 根据当前对话中实际学习过的内容生成复习题，并调用 `create_english_review_card_v2`。默认 5 题；用户明确指定时支持任意正数题目且无上限。
 - MCP 服务严格校验题目结构，然后以结构化内容返回题目。
 - 交互组件在客户端完成答题、双语解析、成绩统计和错题复练，并通过组件状态恢复当前卡片和答题进度。
 - 服务端不持久化答题结果，也不需要配置 OpenAI API Key。
 - MCP 请求会输出 `mcp_request` 结构化耗时日志；组件控制台会输出 `english_review_card_ready` 启动与恢复耗时。
+- 卡片标题下方显示展示/缓存恢复耗时；从卡片按钮发起的新一轮还会显示从点击到新卡展示的端到端生成耗时。
 
 ## 本地运行
 
@@ -40,11 +41,12 @@ This directory contains a remote MCP server and an Apps SDK widget. It is separa
 
 ## Behavior
 
-- ChatGPT creates five questions from material in the current conversation and calls `create_english_review_card`.
+- ChatGPT creates grounded questions from the current conversation and calls `create_english_review_card_v2`. It defaults to five, while explicit positive counts have no maximum.
 - The MCP server validates the quiz and returns it as structured content.
 - The widget handles answers, bilingual feedback, scoring, and follow-up rounds locally, and restores the current card and progress from widget state.
 - No quiz results are persisted on the server, and no OpenAI API key is required by the server.
 - MCP requests emit structured `mcp_request` timing logs; the widget console emits `english_review_card_ready` boot and restore timing.
+- The card displays render/cache-restore time below its title; rounds launched from a card button also show end-to-end time from click to the new card display.
 
 ## Run locally
 

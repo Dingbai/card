@@ -7,7 +7,8 @@ import { widgetHtml } from "./widget.js";
 
 if (!globalThis.crypto) Object.defineProperty(globalThis, "crypto", { value: webcrypto });
 
-export const APP_VERSION = "0.5.0";
+export const APP_VERSION = "0.6.0";
+export const TOOL_NAME = "create_english_review_card_v2";
 const RESOURCE_URI = `ui://widget/english-review-card-v${APP_VERSION}.html`;
 const WIDGET_DOMAIN = "https://chatgpt-app-ashy.vercel.app";
 const WIDGET_CSP = {
@@ -33,9 +34,9 @@ export function createMcpServer() {
       "openai/widgetDomain": WIDGET_DOMAIN,
     } }],
   }));
-  server.registerTool("create_english_review_card", {
+  server.registerTool(TOOL_NAME, {
     title: "Create English review card",
-    description: "Create one interactive English review card grounded only in the current conversation. Put every requested question in this single call (minimum 5; default to 5 mixed questions), honor the requested count and types, and keep each English and Chinese explanation to one concise sentence. If there is not enough study material, ask for more instead of calling the tool.",
+    description: "Create one interactive English review card grounded only in the current conversation. Questions has no maximum count: put the user's exact requested positive number of questions in this single call; default to 5 mixed questions only when no count was requested. Honor requested types, keep each bilingual explanation to one concise sentence, and copy request_started_at_ms exactly when the request supplies it. If there is not enough study material, ask for more instead of calling the tool.",
     inputSchema: quizSchema,
     outputSchema: quizSchema,
     _meta: {
