@@ -21,9 +21,22 @@ test("accepts a grounded five-question mixed quiz", () => {
   assert.equal(quizSchema.parse(sampleQuiz()).questions.length, 5);
 });
 
-test("rejects a quiz with fewer than five questions", () => {
+test("accepts a configured single-type quiz", () => {
   const quiz = sampleQuiz();
-  quiz.questions.pop();
+  quiz.questions = Array.from({ length: 10 }, (_, index) => ({
+    ...quiz.questions[2],
+    id: `short-${index + 1}`,
+    prompt: `Short-answer prompt ${index + 1}`,
+  }));
+  assert.equal(quizSchema.parse(quiz).questions.length, 10);
+});
+
+test("rejects more than twenty questions", () => {
+  const quiz = sampleQuiz();
+  quiz.questions = Array.from({ length: 21 }, (_, index) => ({
+    ...quiz.questions[1],
+    id: `fill-${index + 1}`,
+  }));
   assert.equal(quizSchema.safeParse(quiz).success, false);
 });
 

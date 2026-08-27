@@ -38,16 +38,12 @@ export const quizSchema = z
   .object({
     title: z.string().trim().min(1).max(120),
     source_summary: z.string().trim().min(1).max(500),
-    questions: z.array(questionSchema).length(5),
+    questions: z.array(questionSchema).min(1).max(20),
   })
   .superRefine((quiz, context) => {
     const ids = quiz.questions.map((question) => question.id);
     if (new Set(ids).size !== ids.length) {
       context.addIssue({ code: "custom", message: "Question ids must be unique", path: ["questions"] });
-    }
-    const types = new Set(quiz.questions.map((question) => question.type));
-    if (!types.has("multiple_choice") || types.size < 2) {
-      context.addIssue({ code: "custom", message: "Use multiple choice and at least one other question type", path: ["questions"] });
     }
   });
 

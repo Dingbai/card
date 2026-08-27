@@ -1,6 +1,6 @@
 interface:
   display_name: "英语复习卡片"
-  short_description: "根据当前英语学习对话生成五道互动题，并提供双语解析与错题复练"
+  short_description: "根据当前英语学习对话生成可配置题型与数量的互动复习卡片"
   brand_color: "#315CFF"
   default_prompt: "使用 $english-review-card 根据当前学习对话生成今日英语复习卡片。"
 policy:

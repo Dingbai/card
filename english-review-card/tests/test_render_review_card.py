@@ -30,20 +30,23 @@ class QuizTests(unittest.TestCase):
         self.assertIn("开始今日复习", output)
         self.assertIn("sendFollowUpMessage", output)
         self.assertIn("复练错题", output)
+        self.assertIn('data-action="settings"', output)
+        self.assertIn("更新卡片", output)
+        self.assertIn("data-setting-count", output)
+        self.assertIn("data-setting-type", output)
         self.assertNotIn("<html", output.lower())
 
-    def test_requires_exactly_five_questions(self):
+    def test_accepts_a_configured_question_count_and_single_type(self):
         data = sample_quiz()
-        data["questions"].pop()
-        with self.assertRaisesRegex(ValueError, "exactly five"):
-            validate_quiz(data)
+        data["questions"] = [data["questions"][1]]
+        output = render_fragment(validate_quiz(data))
+        self.assertIn("1 questions", output)
 
-    def test_requires_mixed_types(self):
+    def test_rejects_more_than_twenty_questions(self):
         data = sample_quiz()
-        for question in data["questions"]:
-            question["type"] = "fill_in"
-            question.pop("options", None)
-        with self.assertRaisesRegex(ValueError, "multiple-choice"):
+        template = data["questions"][1]
+        data["questions"] = [{**template, "id": f"q{index}"} for index in range(21)]
+        with self.assertRaisesRegex(ValueError, "1–20"):
             validate_quiz(data)
 
     def test_escapes_script_breakout(self):

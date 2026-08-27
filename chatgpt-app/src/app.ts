@@ -7,27 +7,44 @@ import { widgetHtml } from "./widget.js";
 
 if (!globalThis.crypto) Object.defineProperty(globalThis, "crypto", { value: webcrypto });
 
-const RESOURCE_URI = "ui://widget/english-review-card.html";
+const RESOURCE_URI = "ui://widget/english-review-card-v0.3.0.html";
+const WIDGET_DOMAIN = "https://chatgpt-app-ashy.vercel.app";
+const WIDGET_CSP = {
+  connectDomains: [],
+  resourceDomains: [],
+};
 
 export function createMcpServer() {
-  const server = new McpServer({ name: "english-review-card", version: "0.2.0" });
+  const server = new McpServer({ name: "english-review-card", version: "0.3.0" });
   server.registerResource("english-review-card", RESOURCE_URI, {}, async () => ({
     contents: [{ uri: RESOURCE_URI, mimeType: "text/html+skybridge", text: widgetHtml, _meta: {
-      "openai/widgetDescription": "An interactive five-question English review card with bilingual feedback.",
+      ui: {
+        prefersBorder: true,
+        csp: WIDGET_CSP,
+        domain: WIDGET_DOMAIN,
+      },
+      "openai/widgetDescription": "A configurable interactive English review card with bilingual feedback.",
       "openai/widgetPrefersBorder": true,
+      "openai/widgetCSP": {
+        connect_domains: WIDGET_CSP.connectDomains,
+        resource_domains: WIDGET_CSP.resourceDomains,
+      },
+      "openai/widgetDomain": WIDGET_DOMAIN,
     } }],
   }));
   server.registerTool("create_english_review_card", {
     title: "Create English review card",
-    description: "Create a five-question interactive English quiz grounded only in material from the current conversation. Use after the learner explicitly finishes studying or asks for a review. If the conversation lacks enough material, do not call this tool; ask for more study content instead.",
+    description: "Create exactly one interactive English review card containing 1–20 questions grounded only in the current conversation. Make exactly one tool call per requested card and put every requested question in this call's questions array; never split one card across multiple tool calls. For example, a ten-question request is one call whose questions array has ten items. Honor the requested count and question types. Default to five mixed questions only when no preferences were provided. If the conversation lacks enough material, do not call this tool; ask for more study content instead.",
     inputSchema: quizSchema,
+    outputSchema: quizSchema,
     _meta: {
+      ui: { resourceUri: RESOURCE_URI },
       "openai/outputTemplate": RESOURCE_URI,
       "openai/toolInvocation/invoking": "正在生成英语复习卡片…",
       "openai/toolInvocation/invoked": "英语复习卡片已生成",
     },
   }, async (quiz) => ({
-    content: [{ type: "text", text: "The five-question English review card is ready." }],
+    content: [{ type: "text", text: `The ${quiz.questions.length}-question English review card is ready.` }],
     structuredContent: quiz,
     _meta: { ephemeral: true },
   }));

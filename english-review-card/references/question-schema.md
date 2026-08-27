@@ -24,10 +24,10 @@ Create UTF-8 JSON with this shape:
 ## Requirements
 
 - `title`, `source_summary`, and every string must be non-empty.
-- `questions` must contain exactly five items with unique `id` values.
+- `questions` must contain 1–20 items with unique `id` values. Default to five unless the user requested another count.
 - `type` must be `multiple_choice`, `fill_in`, or `short_answer`.
 - Every question needs `knowledge_point`, `prompt`, at least one `accepted_answers` value, `explanation_en`, and `explanation_zh`.
 - Multiple-choice questions need 2–6 unique `options`; an accepted answer must equal one option exactly.
 - Fill-in and short-answer questions omit `options`. Put common capitalization, contraction, spelling, and clearly valid synonymous variants in `accepted_answers`.
-- Use at least two question types and include at least one multiple-choice question. Prefer all three types when the material supports them.
+- Use only the question types requested by the user. Without explicit settings, use at least two types and include multiple choice; prefer all three when the material supports them.
 - Do not include HTML in any field.
