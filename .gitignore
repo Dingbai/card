@@ -5,3 +5,7 @@
 chatgpt-app/node_modules/
 chatgpt-app/dist/
 chatgpt-app/.env
+_workspace/tasks/.lock
+_workspace/tasks/*.tmp
+__pycache__/
+*.py[cod]
