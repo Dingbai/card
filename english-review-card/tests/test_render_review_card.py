@@ -34,7 +34,9 @@ class QuizTests(unittest.TestCase):
         self.assertIn("更新卡片", output)
         self.assertIn("data-setting-count", output)
         self.assertIn("data-setting-type", output)
-        self.assertIn("Daily English Review · v0.4.0", output)
+        self.assertIn("Daily English Review · v0.4.1", output)
+        self.assertIn("scrollToBottom:true", output)
+        self.assertNotIn("prompt,title", output)
         self.assertNotIn("<html", output.lower())
 
     def test_accepts_a_configured_question_count_and_single_type(self):

@@ -14,14 +14,21 @@ test("renders all questions in one variable-length card", () => {
 });
 
 test("follow-up explicitly requests a new single card", () => {
-  assert.match(widget, /必须再次调用 create_english_review_card/);
-  assert.match(widget, /不要拆成多张卡片，也不要只回复文字/);
-  assert.match(widget, /生成一张新的英语复习卡片/);
+  assert.match(widget, /请立即调用 create_english_review_card 工具一次/);
+  assert.match(widget, /questions 数组必须包含全部/);
+  assert.match(widget, /不要只回复文字/);
 });
 
 test("uses a versioned template URI to avoid stale widget caches", () => {
-  assert.match(appSource, /APP_VERSION = "0\.4\.0"/);
+  assert.match(appSource, /APP_VERSION = "0\.4\.1"/);
   assert.match(appSource, /english-review-card-v\$\{APP_VERSION\}\.html/);
   assert.match(appSource, /ui: \{ resourceUri: RESOURCE_URI \}/);
-  assert.match(widget, /Daily English Review · v0\.4\.0/);
+  assert.match(widget, /Daily English Review · v0\.4\.1/);
+});
+
+test("submits update requests through the supported follow-up signature", () => {
+  assert.match(widget, /sendFollowUpMessage\(\{prompt,scrollToBottom:true\}\)/);
+  assert.doesNotMatch(widget, /sendFollowUpMessage\(\{prompt,title:/);
+  assert.match(widget, /更新请求已提交到对话，正在等待新卡片/);
+  assert.doesNotMatch(widget, /设置已保存并发送/);
 });

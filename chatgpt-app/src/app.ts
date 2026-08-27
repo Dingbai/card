@@ -7,7 +7,7 @@ import { widgetHtml } from "./widget.js";
 
 if (!globalThis.crypto) Object.defineProperty(globalThis, "crypto", { value: webcrypto });
 
-export const APP_VERSION = "0.4.0";
+export const APP_VERSION = "0.4.1";
 const RESOURCE_URI = `ui://widget/english-review-card-v${APP_VERSION}.html`;
 const WIDGET_DOMAIN = "https://chatgpt-app-ashy.vercel.app";
 const WIDGET_CSP = {
