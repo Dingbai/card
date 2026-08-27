@@ -7,7 +7,8 @@ import { widgetHtml } from "./widget.js";
 
 if (!globalThis.crypto) Object.defineProperty(globalThis, "crypto", { value: webcrypto });
 
-const RESOURCE_URI = "ui://widget/english-review-card-v0.3.1.html";
+export const APP_VERSION = "0.4.0";
+const RESOURCE_URI = `ui://widget/english-review-card-v${APP_VERSION}.html`;
 const WIDGET_DOMAIN = "https://chatgpt-app-ashy.vercel.app";
 const WIDGET_CSP = {
   connectDomains: [],
@@ -15,7 +16,7 @@ const WIDGET_CSP = {
 };
 
 export function createMcpServer() {
-  const server = new McpServer({ name: "english-review-card", version: "0.3.1" });
+  const server = new McpServer({ name: "english-review-card", version: APP_VERSION });
   server.registerResource("english-review-card", RESOURCE_URI, {}, async () => ({
     contents: [{ uri: RESOURCE_URI, mimeType: "text/html+skybridge", text: widgetHtml, _meta: {
       ui: {
@@ -23,7 +24,7 @@ export function createMcpServer() {
         csp: WIDGET_CSP,
         domain: WIDGET_DOMAIN,
       },
-      "openai/widgetDescription": "A configurable interactive English review card with bilingual feedback.",
+      "openai/widgetDescription": `English Review Card v${APP_VERSION}, with configurable questions and bilingual feedback.`,
       "openai/widgetPrefersBorder": true,
       "openai/widgetCSP": {
         connect_domains: WIDGET_CSP.connectDomains,
