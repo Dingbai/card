@@ -43,4 +43,4 @@ The card owns only ephemeral in-widget state. Do not save results or connect ext
 
 The card has one configuration entry, “设置”. It lets the learner choose any positive question count, with no maximum, and any non-empty combination of multiple choice, fill-in, and short-answer questions. Applying settings sends a Codex follow-up request to generate a replacement card with that exact configuration.
 
-The completed card also sends a Codex follow-up message when the learner chooses “复练错题” or “再来一组”. Preserve the current question count and selected types in follow-up rounds. For a missed-question round, generate different questions focused only on the listed missed knowledge points and grounded in the same conversation. Do not repeat the original wording.
+The completed card also sends a Codex follow-up message when the learner chooses “复练错题” or “再来一组”. Preserve the selected types in follow-up rounds. Preserve the current question count for “再来一组”; for “复练错题”, generate exactly one new question per missed question. A missed-question round must focus only on the listed missed knowledge points, remain grounded in the same conversation, and avoid the original wording.
