@@ -5,6 +5,10 @@
       "maxDuration": 60,
       "includeFiles": "public/widget.html"
     },
+    "api/mcp-v2.ts": {
+      "maxDuration": 60,
+      "includeFiles": "public/widget.html"
+    },
     "api/health.ts": {
       "maxDuration": 10
     }

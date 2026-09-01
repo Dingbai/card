@@ -4,12 +4,25 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { quizSchema } from "./quiz.js";
 import { widgetHtml } from "./widget.js";
+import {
+  APP_VERSION,
+  COMPATIBLE_MCP_ENDPOINTS,
+  COMPATIBLE_RESOURCE_URIS,
+  CURRENT_RESOURCE_URI,
+  TOOL_NAME,
+} from "./config.js";
+import { healthHandler } from "./health.js";
+
+export {
+  APP_VERSION,
+  COMPATIBLE_MCP_ENDPOINTS,
+  COMPATIBLE_RESOURCE_URIS,
+  CURRENT_RESOURCE_URI,
+  TOOL_NAME,
+} from "./config.js";
 
 if (!globalThis.crypto) Object.defineProperty(globalThis, "crypto", { value: webcrypto });
 
-export const APP_VERSION = "0.6.0";
-export const TOOL_NAME = "create_english_review_card_v2";
-const RESOURCE_URI = `ui://widget/english-review-card-v${APP_VERSION}.html`;
 const WIDGET_DOMAIN = "https://chatgpt-app-ashy.vercel.app";
 const WIDGET_CSP = {
   connectDomains: [],
@@ -18,31 +31,34 @@ const WIDGET_CSP = {
 
 export function createMcpServer() {
   const server = new McpServer({ name: "english-review-card", version: APP_VERSION });
-  server.registerResource("english-review-card", RESOURCE_URI, {}, async () => ({
-    contents: [{ uri: RESOURCE_URI, mimeType: "text/html+skybridge", text: widgetHtml, _meta: {
-      ui: {
-        prefersBorder: true,
-        csp: WIDGET_CSP,
-        domain: WIDGET_DOMAIN,
-      },
-      "openai/widgetDescription": `English Review Card v${APP_VERSION}, with configurable questions and bilingual feedback.`,
-      "openai/widgetPrefersBorder": true,
-      "openai/widgetCSP": {
-        connect_domains: WIDGET_CSP.connectDomains,
-        resource_domains: WIDGET_CSP.resourceDomains,
-      },
-      "openai/widgetDomain": WIDGET_DOMAIN,
-    } }],
-  }));
+  for (const uri of COMPATIBLE_RESOURCE_URIS) {
+    const version = uri === CURRENT_RESOURCE_URI ? APP_VERSION : uri.match(/-v(.+)\.html$/)?.[1] ?? "compat";
+    server.registerResource(`english-review-card-v${version}`, uri, {}, async () => ({
+      contents: [{ uri, mimeType: "text/html+skybridge", text: widgetHtml, _meta: {
+        ui: {
+          prefersBorder: true,
+          csp: WIDGET_CSP,
+          domain: WIDGET_DOMAIN,
+        },
+        "openai/widgetDescription": `English Review Card v${APP_VERSION}, with configurable questions and bilingual feedback.`,
+        "openai/widgetPrefersBorder": true,
+        "openai/widgetCSP": {
+          connect_domains: WIDGET_CSP.connectDomains,
+          resource_domains: WIDGET_CSP.resourceDomains,
+        },
+        "openai/widgetDomain": WIDGET_DOMAIN,
+      } }],
+    }));
+  }
   server.registerTool(TOOL_NAME, {
     title: "Create English review card",
     description: "Create one interactive English review card grounded only in the current conversation. Questions has no maximum count: put the user's exact requested positive number of questions in this single call; default to 5 mixed questions only when no count was requested. Honor requested types, keep each bilingual explanation to one concise sentence, and copy request_started_at_ms exactly when the request supplies it. If there is not enough study material, ask for more instead of calling the tool.",
     inputSchema: quizSchema,
     outputSchema: quizSchema,
     _meta: {
-      ui: { resourceUri: RESOURCE_URI },
-      "openai/outputTemplate": RESOURCE_URI,
-      "openai/toolInvocation/invoking": "正在生成英语复习卡片…",
+      ui: { resourceUri: CURRENT_RESOURCE_URI },
+      "openai/outputTemplate": CURRENT_RESOURCE_URI,
+      "openai/toolInvocation/invoking": "正在生成英语复习卡片，题目就绪前将显示加载占位…",
       "openai/toolInvocation/invoked": "英语复习卡片已生成",
     },
   }, async (quiz) => ({
@@ -73,13 +89,13 @@ export function createApp() {
     <div class="status"><span class="dot" aria-hidden="true"></span><strong>MCP 服务运行中</strong></div>
     <p>这个页面用于确认服务已经成功部署。学习卡片需要在 ChatGPT 中连接 MCP 地址后使用，不会直接显示在普通浏览器首页。</p>
     <p><strong>ChatGPT MCP 地址</strong></p>
-    <code>https://chatgpt-app-ashy.vercel.app/api/mcp</code>
+    <code>https://chatgpt-app-ashy.vercel.app/api/mcp-v2</code>
     <p><a href="/api/health">查看健康检查</a></p>
   </main>
 </body>
 </html>`);
   });
-  app.post(["/mcp", "/api/mcp"], async (request, response) => {
+  app.post([...COMPATIBLE_MCP_ENDPOINTS], async (request, response) => {
     const startedAt = performance.now();
     const server = createMcpServer();
     const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });
@@ -100,9 +116,9 @@ export function createApp() {
     }
     response.on("close", () => { void transport.close(); void server.close(); });
   });
-  app.get(["/mcp", "/api/mcp"], (_request, response) => response.status(405).json({ jsonrpc: "2.0", error: { code: -32000, message: "Method not allowed" }, id: null }));
-  app.delete(["/mcp", "/api/mcp"], (_request, response) => response.status(405).json({ jsonrpc: "2.0", error: { code: -32000, message: "Method not allowed" }, id: null }));
-  app.get(["/health", "/api/health"], (_request, response) => response.json({ ok: true }));
+  app.get([...COMPATIBLE_MCP_ENDPOINTS], (_request, response) => response.status(405).json({ jsonrpc: "2.0", error: { code: -32000, message: "Method not allowed" }, id: null }));
+  app.delete([...COMPATIBLE_MCP_ENDPOINTS], (_request, response) => response.status(405).json({ jsonrpc: "2.0", error: { code: -32000, message: "Method not allowed" }, id: null }));
+  app.get(["/health", "/api/health"], healthHandler);
   return app;
 }
 
