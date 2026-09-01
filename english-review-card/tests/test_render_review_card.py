@@ -42,7 +42,7 @@ class QuizTests(unittest.TestCase):
         self.assertIn("erc-skeleton", output)
         self.assertIn("settingsButton.hidden=true", output)
         self.assertIn("cancelSettings", output)
-        self.assertIn("Daily English Review · v0.6.0", output)
+        self.assertIn("Daily English Review · v0.7.0", output)
         self.assertIn("scrollToBottom:true", output)
         self.assertIn("questionCount=missed.length||quiz.questions.length", output)
         self.assertIn("题目数量必须等于本轮", output)

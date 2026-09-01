@@ -12,7 +12,7 @@ from typing import Any
 
 ALLOWED_TYPES = {"multiple_choice", "fill_in", "short_answer"}
 REQUIRED_FIELDS = {"id", "type", "knowledge_point", "prompt", "accepted_answers", "explanation_en", "explanation_zh"}
-CARD_VERSION = "0.6.0"
+CARD_VERSION = "0.7.0"
 
 
 def _text(value: Any, field: str) -> str:
