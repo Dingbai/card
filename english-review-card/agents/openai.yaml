@@ -2,6 +2,6 @@ interface:
   display_name: "英语复习卡片"
   short_description: "根据当前英语学习对话生成可配置题型与数量的互动复习卡片"
   brand_color: "#315CFF"
-  default_prompt: "使用 $english-review-card 根据当前学习对话生成今日英语复习卡片。"
+  default_prompt: "使用 $english-review-card 根据当前学习对话生成英语复习卡片；用户说 done、学完了、开始复习或明确要求复习时均可触发。"
 policy:
   allow_implicit_invocation: true

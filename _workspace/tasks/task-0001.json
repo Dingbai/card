@@ -1,0 +1,47 @@
+{
+  "artifacts": [],
+  "assignee": "integration-owner",
+  "blocked_reason": null,
+  "created_at": "2026-09-02T02:24:02Z",
+  "depends_on": [],
+  "description": "Add Enter submit/next behavior, 80 percent spelling tolerance with explicit feedback, and natural review triggers across both surfaces.",
+  "history": [
+    {
+      "actor": "integration-owner",
+      "at": "2026-09-02T02:24:02Z",
+      "from": null,
+      "note": "task created",
+      "to": "assigned"
+    },
+    {
+      "actor": "integration-owner",
+      "at": "2026-09-02T02:24:03Z",
+      "from": "assigned",
+      "note": "Beginning first independently committable stage.",
+      "to": "in_progress"
+    },
+    {
+      "actor": "integration-owner",
+      "at": "2026-09-02T02:26:16Z",
+      "from": "in_progress",
+      "note": "Both cross-surface test suites pass.",
+      "to": "review"
+    },
+    {
+      "actor": "integration-owner",
+      "at": "2026-09-02T02:26:16Z",
+      "from": "review",
+      "note": "Accepted keyboard, spelling tolerance, trigger, documentation, and test coverage.",
+      "to": "completed"
+    }
+  ],
+  "id": "task-0001",
+  "owned_paths": [
+    "english-review-card",
+    "chatgpt-app"
+  ],
+  "schema_version": 1,
+  "status": "completed",
+  "title": "Stage 1: interaction and tolerant spelling",
+  "updated_at": "2026-09-02T02:26:16Z"
+}

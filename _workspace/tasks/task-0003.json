@@ -1,0 +1,28 @@
+{
+  "artifacts": [],
+  "assignee": "integration-owner",
+  "blocked_reason": null,
+  "created_at": "2026-09-02T02:24:03Z",
+  "depends_on": [
+    "task-0002"
+  ],
+  "description": "Persist dated learning summaries and add grounded recent-N-calendar-day selection with local and MCP-compatible contracts.",
+  "history": [
+    {
+      "actor": "integration-owner",
+      "at": "2026-09-02T02:24:03Z",
+      "from": null,
+      "note": "task created",
+      "to": "assigned"
+    }
+  ],
+  "id": "task-0003",
+  "owned_paths": [
+    "english-review-card",
+    "chatgpt-app"
+  ],
+  "schema_version": 1,
+  "status": "assigned",
+  "title": "Stage 3: dated summaries and N-day review",
+  "updated_at": "2026-09-02T02:24:03Z"
+}

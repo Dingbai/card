@@ -47,6 +47,13 @@ test("persists and restores the quiz and answer progress", () => {
   assert.doesNotMatch(appSource, /ephemeral:\s*true/);
 });
 
+test("supports keyboard progression and marks tolerated spelling", () => {
+  assert.match(widget, /best\.similarity>=\.8/);
+  assert.match(widget, /Correct with a spelling note!/);
+  assert.match(widget, /state\.locked\?next\(\):submit\(\)/);
+  assert.match(widget, /event\.shiftKey/);
+});
+
 test("records server and widget timing diagnostics", () => {
   assert.match(appSource, /console\.info\("mcp_request"/);
   assert.match(appSource, /initMs:/);

@@ -1,5 +1,27 @@
 {
-  "next_id": 1,
+  "next_id": 4,
   "schema_version": 1,
-  "tasks": {}
+  "tasks": {
+    "task-0001": {
+      "assignee": "integration-owner",
+      "file": "task-0001.json",
+      "status": "completed",
+      "title": "Stage 1: interaction and tolerant spelling",
+      "updated_at": "2026-09-02T02:26:16Z"
+    },
+    "task-0002": {
+      "assignee": "integration-owner",
+      "file": "task-0002.json",
+      "status": "assigned",
+      "title": "Stage 2: hybrid short-answer grading",
+      "updated_at": "2026-09-02T02:24:03Z"
+    },
+    "task-0003": {
+      "assignee": "integration-owner",
+      "file": "task-0003.json",
+      "status": "assigned",
+      "title": "Stage 3: dated summaries and N-day review",
+      "updated_at": "2026-09-02T02:24:03Z"
+    }
+  }
 }

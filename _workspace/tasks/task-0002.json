@@ -1,0 +1,28 @@
+{
+  "artifacts": [],
+  "assignee": "integration-owner",
+  "blocked_reason": null,
+  "created_at": "2026-09-02T02:24:03Z",
+  "depends_on": [
+    "task-0001"
+  ],
+  "description": "Add rubric-aware deterministic grading and model-review handoff for ambiguous short answers across both surfaces.",
+  "history": [
+    {
+      "actor": "integration-owner",
+      "at": "2026-09-02T02:24:03Z",
+      "from": null,
+      "note": "task created",
+      "to": "assigned"
+    }
+  ],
+  "id": "task-0002",
+  "owned_paths": [
+    "english-review-card",
+    "chatgpt-app"
+  ],
+  "schema_version": 1,
+  "status": "assigned",
+  "title": "Stage 2: hybrid short-answer grading",
+  "updated_at": "2026-09-02T02:24:03Z"
+}

@@ -52,7 +52,7 @@ export function createMcpServer() {
   }
   server.registerTool(TOOL_NAME, {
     title: "Create English review card",
-    description: "Create one interactive English review card grounded only in the current conversation. Questions has no maximum count: put the user's exact requested positive number of questions in this single call; default to 5 mixed questions only when no count was requested. Honor requested types, keep each bilingual explanation to one concise sentence, and copy request_started_at_ms exactly when the request supplies it. If there is not enough study material, ask for more instead of calling the tool.",
+    description: "Create one interactive English review card grounded only in the current conversation. Treat explicit completion or review requests such as done, finished, 学完了, 今天学完了, 开始复习, or 复习一下 as triggers; treat a bare review/复习 as a trigger only when context clearly asks to begin the card. Questions has no maximum count: put the user's exact requested positive number of questions in this single call; default to 5 mixed questions only when no count was requested. Honor requested types, keep each bilingual explanation to one concise sentence, and copy request_started_at_ms exactly when the request supplies it. If there is not enough study material, ask for more instead of calling the tool.",
     inputSchema: quizSchema,
     outputSchema: quizSchema,
     _meta: {

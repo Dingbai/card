@@ -1,6 +1,6 @@
 ---
 name: english-review-card
-description: Generate an interactive English review card from material actually covered in the current Codex conversation. Use when the user explicitly says today's English study is finished, asks for today's review quiz, or invokes $english-review-card; do not trigger merely because English is mentioned.
+description: Generate an interactive English review card from material actually covered in the current Codex conversation. Use when the user explicitly finishes with phrases such as done or 学完了, asks to start a review, or invokes $english-review-card; do not trigger merely because English is mentioned.
 ---
 
 # English Review Card
@@ -9,7 +9,7 @@ Create a configurable review card grounded only in the current conversation.
 
 ## Ground the quiz
 
-- Treat explicit completion phrases such as “今天学完了”, “今天的英语学完了”, or “finished studying for today” as the normal trigger. Do not infer completion from an ordinary pause.
+- Treat explicit completion or review phrases such as “done”, “finished”, “学完了”, “今天学完了”, “开始复习”, “复习一下”, or “finished studying for today” as normal triggers. A bare “复习” or “review” is a trigger only when the surrounding request clearly asks to generate or begin the card; do not infer completion from an ordinary pause or a discussion about review methods.
 - Extract only vocabulary, grammar, expressions, or reading ideas that were actually taught or practiced in the conversation.
 - Use five mixed questions by default. If the user specifies any positive question count or question types, honor those settings instead; there is no maximum count.
 - If there is not enough material for the requested number of grounded questions, do not invent content. Briefly explain what is missing and ask the user to reduce the count or provide more study material.
