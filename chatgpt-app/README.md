@@ -69,12 +69,27 @@ The MCP endpoint is `http://localhost:8787/mcp` and the health endpoint is `http
 
 ## Deploy privately
 
-1. Import the GitHub repository in Vercel and set the Root Directory to `chatgpt-app`.
-2. Keep the Framework Preset set to Other; no environment variables are required.
-3. Confirm that `https://YOUR_DOMAIN/api/health` reports the version, tool name, current resource URI, and compatible resource URIs; do not check only `ok`.
-4. Run `npm run smoke -- https://YOUR_DOMAIN/api/mcp-v2`. It initializes MCP, checks the tool schema, lists and reads the current and previous resources, then verifies one v2 call containing ten questions.
-5. Remove the ChatGPT connection that points to the old `/api/mcp`, then create a private remote MCP app with `https://YOUR_DOMAIN/api/mcp-v2`. The new URL forces fresh tool discovery.
-6. Start an English-learning conversation. When finished, ask ChatGPT to create the English review card from the material covered in that conversation.
+Production deployment is owned by `.github/workflows/ci-cd.yml`. Pull requests to `main` run the local Skill tests, task-tooling tests, TypeScript check, and app tests. A push to `main` repeats those checks, builds once with Vercel CLI, deploys the prebuilt artifact to Production, and verifies both `/api/health` and `/api/mcp-v2`. Production jobs are serialized and are never cancelled by a newer commit.
+
+Initial setup:
+
+1. Create or import the Vercel project with Root Directory `chatgpt-app` and Framework Preset `Other`. No application environment variables are required.
+2. Create a GitHub environment named `production`. Add `VERCEL_TOKEN` as an environment secret and add `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, and `PRODUCTION_URL` as environment variables. `PRODUCTION_URL` must be the stable production origin, for example `https://cards.example.com`, without an endpoint path.
+3. Leave Git integration available for pull-request previews if desired. `vercel.json` disables Git-triggered deployments for `main`, because GitHub Actions is the sole Production deployer.
+4. Protect `main` and require the `Verify both review-card surfaces` check before merging.
+
+Before each release, the workflow records the current READY Production deployment and its reported version. After deployment it retries the full health-contract check up to five times, then retries the MCP smoke test up to five times. If either post-deployment check fails, the workflow rolls back to the recorded deployment, verifies that the old version is live again, and remains failed so the incident is visible. The Actions summary records the commit SHA, deployment URL, new deployment ID, and previous deployment ID.
+
+The automatic path requires an existing healthy Production deployment so that every release has a rollback target. Bootstrap the first deployment manually with Vercel, confirm its health endpoint, and then enable the GitHub workflow.
+
+For manual verification, run:
+
+```bash
+npm run verify:deployment -- https://YOUR_DOMAIN
+npm run smoke -- https://YOUR_DOMAIN/api/mcp-v2
+```
+
+The smoke check initializes MCP, checks the tool schema, lists and reads the current and previous resources, then verifies one v2 call containing ten questions. Remove any ChatGPT connection that points to the old `/api/mcp`, then create the private remote MCP app with `https://YOUR_DOMAIN/api/mcp-v2`; the new URL forces fresh tool discovery.
 
 Whenever `APP_VERSION` changes, set `PREVIOUS_APP_VERSION` to the version being replaced. The service intentionally supports only the current and immediately previous widget URIs. If the smoke check still reports an old tool or schema, verify the Vercel project, deployed commit, Root Directory, and saved ChatGPT MCP URL instead of changing quiz business logic again.
 
