@@ -12,9 +12,9 @@
     "task-0002": {
       "assignee": "integration-owner",
       "file": "task-0002.json",
-      "status": "assigned",
+      "status": "completed",
       "title": "Stage 2: hybrid short-answer grading",
-      "updated_at": "2026-09-02T02:24:03Z"
+      "updated_at": "2026-09-02T02:31:22Z"
     },
     "task-0003": {
       "assignee": "integration-owner",

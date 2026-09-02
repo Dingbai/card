@@ -66,3 +66,11 @@ test("rejects an answer that does not match a multiple-choice option", () => {
   quiz.questions[0].accepted_answers = ["Something else"];
   assert.equal(quizSchema.safeParse(quiz).success, false);
 });
+
+test("allows grading guidance only on short answers", () => {
+  const quiz = sampleQuiz();
+  (quiz.questions[2] as any).grading_guidance = "Accept any semantically equivalent polite request.";
+  assert.equal(quizSchema.safeParse(quiz).success, true);
+  (quiz.questions[1] as any).grading_guidance = "Not valid for fill-in.";
+  assert.equal(quizSchema.safeParse(quiz).success, false);
+});

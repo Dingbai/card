@@ -19,7 +19,7 @@ Create a configurable review card grounded only in the current conversation.
 
 Read [references/question-schema.md](references/question-schema.md), then create one JSON file matching that schema. Use at least one question, with no maximum count. Unless the user supplied settings, create five questions with a useful mixture of multiple choice, fill-in, and short-answer questions. Keep prompts primarily in English and explanations bilingual. When a card follow-up supplies `request_started_at_ms`, copy it exactly into the quiz so the next card can display end-to-end generation time.
 
-For short answers, list reasonable synonymous answers in `accepted_answers`. Browser-side grading is deliberately conservative; include common variants that are clearly supported by the conversation.
+For short answers, list reasonable synonymous answers in `accepted_answers` and always add concise `grading_guidance` describing the meaning or ideas required for a correct response. Browser-side grading remains conservative: exact and spelling-tolerant matches are immediate, while an unmatched short answer is offered to the model for semantic review in the conversation instead of being presented as definitively wrong.
 
 ## Render and present
 

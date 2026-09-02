@@ -54,6 +54,13 @@ test("supports keyboard progression and marks tolerated spelling", () => {
   assert.match(widget, /event\.shiftKey/);
 });
 
+test("hands ambiguous short answers to the conversation for semantic review", () => {
+  assert.match(widget, /Needs semantic review/);
+  assert.match(widget, /grading_guidance/);
+  assert.match(widget, /requestModelReview/);
+  assert.match(widget, /不要生成新卡片/);
+});
+
 test("records server and widget timing diagnostics", () => {
   assert.match(appSource, /console\.info\("mcp_request"/);
   assert.match(appSource, /initMs:/);

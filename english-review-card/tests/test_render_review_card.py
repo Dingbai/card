@@ -49,9 +49,19 @@ class QuizTests(unittest.TestCase):
         self.assertIn("Correct with a spelling note!", output)
         self.assertIn("state.locked?next():submit()", output)
         self.assertIn("event.shiftKey", output)
+        self.assertIn("Needs semantic review", output)
+        self.assertIn("requestModelReview", output)
         self.assertIn("题目数量必须等于本轮", output)
         self.assertNotIn("prompt,title", output)
         self.assertNotIn("<html", output.lower())
+
+    def test_grading_guidance_is_only_valid_for_short_answers(self):
+        data = sample_quiz()
+        data["questions"][2]["grading_guidance"] = "Accept a polite request with the intended meaning."
+        self.assertEqual(validate_quiz(data)["questions"][2]["grading_guidance"], "Accept a polite request with the intended meaning.")
+        data["questions"][1]["grading_guidance"] = "Not valid here."
+        with self.assertRaisesRegex(ValueError, "only valid for short_answer"):
+            validate_quiz(data)
 
     def test_accepts_a_configured_question_count_and_single_type(self):
         data = sample_quiz()

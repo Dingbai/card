@@ -14,6 +14,27 @@
       "from": null,
       "note": "task created",
       "to": "assigned"
+    },
+    {
+      "actor": "integration-owner",
+      "at": "2026-09-02T02:27:08Z",
+      "from": "assigned",
+      "note": "Stage 1 committed as 9123fb4; beginning rubric and model-review handoff.",
+      "to": "in_progress"
+    },
+    {
+      "actor": "integration-owner",
+      "at": "2026-09-02T02:31:22Z",
+      "from": "in_progress",
+      "note": "Schema, renderer, widget, docs, and both suites verified.",
+      "to": "review"
+    },
+    {
+      "actor": "integration-owner",
+      "at": "2026-09-02T02:31:22Z",
+      "from": "review",
+      "note": "Accepted rubric-aware model-review handoff with explicit card-state limitation.",
+      "to": "completed"
     }
   ],
   "id": "task-0002",
@@ -22,7 +43,7 @@
     "chatgpt-app"
   ],
   "schema_version": 1,
-  "status": "assigned",
+  "status": "completed",
   "title": "Stage 2: hybrid short-answer grading",
-  "updated_at": "2026-09-02T02:24:03Z"
+  "updated_at": "2026-09-02T02:31:22Z"
 }

@@ -14,6 +14,7 @@ const baseQuestionSchema = z.object({
   accepted_answers: z.array(z.string().trim().min(1).max(300)).min(1).max(12),
   explanation_en: z.string().trim().min(1).max(800),
   explanation_zh: z.string().trim().min(1).max(800),
+  grading_guidance: z.string().trim().min(1).max(500).optional(),
 });
 
 export const questionSchema = baseQuestionSchema
@@ -31,6 +32,9 @@ export const questionSchema = baseQuestionSchema
       }
     } else if (question.options) {
       context.addIssue({ code: "custom", message: "Only multiple-choice questions may have options", path: ["options"] });
+    }
+    if (question.type !== "short_answer" && question.grading_guidance) {
+      context.addIssue({ code: "custom", message: "Only short-answer questions may have grading guidance", path: ["grading_guidance"] });
     }
   });
 
