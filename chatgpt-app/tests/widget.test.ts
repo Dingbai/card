@@ -22,12 +22,12 @@ test("follow-up explicitly requests a new single card", () => {
 });
 
 test("uses a versioned template URI to avoid stale widget caches", () => {
-  assert.match(configSource, /APP_VERSION = "0\.6\.0"/);
-  assert.match(configSource, /PREVIOUS_APP_VERSION = "0\.5\.0"/);
+  assert.match(configSource, /APP_VERSION = "0\.7\.0"/);
+  assert.match(configSource, /PREVIOUS_APP_VERSION = "0\.6\.0"/);
   assert.match(configSource, /TOOL_NAME = "create_english_review_card_v2"/);
   assert.match(configSource, /english-review-card-v\$\{version\}\.html/);
   assert.match(appSource, /ui: \{ resourceUri: CURRENT_RESOURCE_URI \}/);
-  assert.match(widget, /Daily English Review · v0\.6\.0/);
+  assert.match(widget, /Daily English Review · v0\.7\.0/);
 });
 
 test("publishes a versioned MCP endpoint to force fresh tool discovery", () => {
