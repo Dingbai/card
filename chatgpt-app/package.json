@@ -7,9 +7,10 @@
     "build": "node node_modules/typescript/bin/tsc",
     "dev": "npm run build && node --watch dist/src/server.js",
     "start": "node dist/src/server.js",
-    "test": "npm run build && node --test dist/tests/*.test.js",
+    "test": "npm run build && node --test dist/tests/*.test.js scripts/*.test.mjs",
     "check": "node node_modules/typescript/bin/tsc --noEmit",
-    "smoke": "node scripts/smoke-mcp.mjs"
+    "smoke": "node scripts/smoke-mcp.mjs",
+    "verify:deployment": "node scripts/verify-deployment.mjs"
   },
   "engines": {
     "node": ">=20"
