@@ -1,0 +1,54 @@
+{
+  "title": "Today's English Review",
+  "source_summary": "今天学习的机场英语：办理登机、行李托运与礼貌提问",
+  "questions": [
+    {
+      "id": "q1",
+      "type": "multiple_choice",
+      "knowledge_point": "check in for a flight",
+      "prompt": "Which sentence means ‘办理登机手续’？",
+      "options": ["Check in for a flight", "Check out a suitcase", "Pick up a passport"],
+      "accepted_answers": ["Check in for a flight"],
+      "explanation_en": "Check in for a flight means to register at the airport before boarding.",
+      "explanation_zh": "Check in for a flight 指在登机前办理值机手续。"
+    },
+    {
+      "id": "q2",
+      "type": "fill_in",
+      "knowledge_point": "checked baggage",
+      "prompt": "I would like to ___ this suitcase.",
+      "accepted_answers": ["check"],
+      "explanation_en": "Check a suitcase means to hand it over as checked baggage.",
+      "explanation_zh": "Check a suitcase 表示把行李办理托运。"
+    },
+    {
+      "id": "q3",
+      "type": "short_answer",
+      "knowledge_point": "polite airport requests",
+      "prompt": "Politely ask where the boarding gate is.",
+      "accepted_answers": ["Could you tell me where the boarding gate is?", "Could you tell me where my gate is?"],
+      "grading_guidance": "Accept a grammatically clear and polite request asking for the location of the boarding gate.",
+      "explanation_en": "Could you tell me… is a polite way to ask airport staff for help.",
+      "explanation_zh": "Could you tell me… 是向机场工作人员礼貌求助的表达。"
+    },
+    {
+      "id": "q4",
+      "type": "multiple_choice",
+      "knowledge_point": "baggage claim",
+      "prompt": "Where do you collect your suitcase after landing?",
+      "options": ["At baggage claim", "At the boarding gate", "At security"],
+      "accepted_answers": ["At baggage claim"],
+      "explanation_en": "Baggage claim is the area where arriving passengers collect checked luggage.",
+      "explanation_zh": "Baggage claim 是抵达后领取托运行李的区域。"
+    },
+    {
+      "id": "q5",
+      "type": "fill_in",
+      "knowledge_point": "aisle seat",
+      "prompt": "Could I have an ___ seat, please?",
+      "accepted_answers": ["aisle"],
+      "explanation_en": "An aisle seat is next to the passage through the cabin.",
+      "explanation_zh": "Aisle seat 指靠近机舱过道的座位。"
+    }
+  ]
+}

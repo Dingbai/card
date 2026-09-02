@@ -1,0 +1,7 @@
+file 'assets/card-start.png'
+duration 2.5
+file 'assets/card-feedback.png'
+duration 4.0
+file 'assets/card-result.png'
+duration 3.5
+file 'assets/card-result.png'
