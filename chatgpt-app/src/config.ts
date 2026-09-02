@@ -1,5 +1,5 @@
-export const APP_VERSION = "0.7.0";
-export const PREVIOUS_APP_VERSION = "0.6.0";
+export const APP_VERSION = "0.8.0";
+export const PREVIOUS_APP_VERSION = "0.7.0";
 export const TOOL_NAME = "create_english_review_card_v2";
 export const CURRENT_MCP_ENDPOINT = "/api/mcp-v2";
 export const COMPATIBLE_MCP_ENDPOINTS = [CURRENT_MCP_ENDPOINT, "/api/mcp", "/mcp"] as const;

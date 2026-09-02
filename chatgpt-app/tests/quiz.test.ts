@@ -61,6 +61,14 @@ test("accepts the optional end-to-end timing marker", () => {
   assert.equal(parsed.request_started_at_ms, 1787832000000);
 });
 
+test("accepts a positive recent-calendar-day review window", () => {
+  const quiz = sampleQuiz();
+  const review_window = { days: 2, start_date: "2026-09-01", end_date: "2026-09-02", timezone: "Asia/Shanghai", summary_count: 2 };
+  assert.equal(quizSchema.safeParse({ ...quiz, review_window }).success, true);
+  assert.equal(quizSchema.safeParse({ ...quiz, review_window: { ...review_window, summary_count: 0 } }).success, false);
+  assert.equal(quizSchema.safeParse({ ...quiz, review_window: { ...review_window, start_date: "2026-09-03" } }).success, false);
+});
+
 test("rejects an answer that does not match a multiple-choice option", () => {
   const quiz = sampleQuiz();
   quiz.questions[0].accepted_answers = ["Something else"];

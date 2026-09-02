@@ -6,6 +6,18 @@ export const questionTypeSchema = z.enum([
   "short_answer",
 ]);
 
+const isoDateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Expected YYYY-MM-DD");
+const reviewWindowSchema = z.object({
+  days: z.number().int().positive(),
+  start_date: isoDateSchema,
+  end_date: isoDateSchema,
+  timezone: z.string().trim().min(1).max(80),
+  summary_count: z.number().int().positive(),
+}).refine((window) => window.start_date <= window.end_date, {
+  message: "start_date must not be after end_date",
+  path: ["start_date"],
+});
+
 const baseQuestionSchema = z.object({
   id: z.string().trim().min(1).max(40),
   type: questionTypeSchema,
@@ -43,6 +55,7 @@ export const quizSchema = z
     title: z.string().trim().min(1).max(120),
     source_summary: z.string().trim().min(1).max(500),
     request_started_at_ms: z.number().int().positive().optional(),
+    review_window: reviewWindowSchema.optional(),
     questions: z.array(questionSchema).min(1),
   })
   .superRefine((quiz, context) => {

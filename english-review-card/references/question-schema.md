@@ -6,6 +6,13 @@ Create UTF-8 JSON with this shape:
 {
   "title": "Today's English Review",
   "source_summary": "A short description of the material covered",
+  "review_window": {
+    "days": 2,
+    "start_date": "2026-09-01",
+    "end_date": "2026-09-02",
+    "timezone": "Asia/Shanghai",
+    "summary_count": 2
+  },
   "request_started_at_ms": 1787832000000,
   "questions": [
     {
@@ -27,6 +34,7 @@ Create UTF-8 JSON with this shape:
 
 - `title`, `source_summary`, and every string must be non-empty.
 - `request_started_at_ms` is optional. Include it only when the request for this specific card supplies the exact value, so the card can display its own generation time. Never carry a timing marker over from another card.
+- `review_window` is optional and used only for a recent-N-calendar-day request. `days` and `summary_count` are positive integers, the dates use `YYYY-MM-DD`, `start_date` is not after `end_date`, and `timezone` is the timezone used by the summary selector. Do not include a window with zero summaries; ask for study material instead.
 - `questions` must contain at least 1 item with unique `id` values. There is no maximum count. Default to five unless the user requested another positive count.
 - `type` must be `multiple_choice`, `fill_in`, or `short_answer`.
 - Every question needs `knowledge_point`, `prompt`, at least one `accepted_answers` value, `explanation_en`, and `explanation_zh`.

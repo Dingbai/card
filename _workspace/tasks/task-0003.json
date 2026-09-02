@@ -1,5 +1,7 @@
 {
-  "artifacts": [],
+  "artifacts": [
+    "english-review-card/scripts/manage_study_history.py"
+  ],
   "assignee": "integration-owner",
   "blocked_reason": null,
   "created_at": "2026-09-02T02:24:03Z",
@@ -14,6 +16,27 @@
       "from": null,
       "note": "task created",
       "to": "assigned"
+    },
+    {
+      "actor": "integration-owner",
+      "at": "2026-09-02T02:32:12Z",
+      "from": "assigned",
+      "note": "Stage 2 committed as ba167d8; implementing durable local summaries and shared review-window contract.",
+      "to": "in_progress"
+    },
+    {
+      "actor": "integration-owner",
+      "at": "2026-09-02T02:36:41Z",
+      "from": "in_progress",
+      "note": "History storage, calendar filtering, shared schema, release metadata, docs, and both suites verified.",
+      "to": "review"
+    },
+    {
+      "actor": "integration-owner",
+      "at": "2026-09-02T02:36:41Z",
+      "from": "review",
+      "note": "Accepted local durable history and honest remote review-window boundary.",
+      "to": "completed"
     }
   ],
   "id": "task-0003",
@@ -22,7 +45,7 @@
     "chatgpt-app"
   ],
   "schema_version": 1,
-  "status": "assigned",
+  "status": "completed",
   "title": "Stage 3: dated summaries and N-day review",
-  "updated_at": "2026-09-02T02:24:03Z"
+  "updated_at": "2026-09-02T02:36:41Z"
 }

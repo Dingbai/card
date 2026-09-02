@@ -42,7 +42,7 @@ class QuizTests(unittest.TestCase):
         self.assertIn("erc-skeleton", output)
         self.assertIn("settingsButton.hidden=true", output)
         self.assertIn("cancelSettings", output)
-        self.assertIn("Daily English Review · v0.7.0", output)
+        self.assertIn("Daily English Review · v0.8.0", output)
         self.assertIn("scrollToBottom:true", output)
         self.assertIn("questionCount=missed.length||quiz.questions.length", output)
         self.assertIn("best.similarity>=.8", output)
@@ -82,6 +82,21 @@ class QuizTests(unittest.TestCase):
         data = sample_quiz()
         data["request_started_at_ms"] = 1787832000000
         self.assertEqual(validate_quiz(data)["request_started_at_ms"], 1787832000000)
+
+    def test_accepts_and_renders_a_recent_day_window(self):
+        data = sample_quiz()
+        data["review_window"] = {
+            "days": 2,
+            "start_date": "2026-09-01",
+            "end_date": "2026-09-02",
+            "timezone": "Asia/Shanghai",
+            "summary_count": 2,
+        }
+        output = render_fragment(validate_quiz(data))
+        self.assertIn("2026-09-01–2026-09-02 (2 days)", output)
+        data["review_window"]["summary_count"] = 0
+        with self.assertRaisesRegex(ValueError, "positive integer"):
+            validate_quiz(data)
 
     def test_escapes_script_breakout(self):
         data = sample_quiz()

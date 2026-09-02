@@ -19,9 +19,9 @@
     "task-0003": {
       "assignee": "integration-owner",
       "file": "task-0003.json",
-      "status": "assigned",
+      "status": "completed",
       "title": "Stage 3: dated summaries and N-day review",
-      "updated_at": "2026-09-02T02:24:03Z"
+      "updated_at": "2026-09-02T02:36:41Z"
     }
   }
 }

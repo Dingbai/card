@@ -5,7 +5,7 @@ description: Generate an interactive English review card from material actually 
 
 # English Review Card
 
-Create a configurable review card grounded only in the current conversation.
+Create a configurable review card grounded in the current conversation or in dated local summaries explicitly selected for a recent-day review.
 
 ## Ground the quiz
 
@@ -14,6 +14,24 @@ Create a configurable review card grounded only in the current conversation.
 - Use five mixed questions by default. If the user specifies any positive question count or question types, honor those settings instead; there is no maximum count.
 - If there is not enough material for the requested number of grounded questions, do not invent content. Briefly explain what is missing and ask the user to reduce the count or provide more study material.
 - Match difficulty to the learner's demonstrated performance and the complexity of the source material.
+
+## Maintain dated summaries
+
+Read [references/study-summary-schema.md](references/study-summary-schema.md). On an explicit completion trigger such as `done` or “学完了”, create a compact summary JSON from material actually covered, using the learner-local date and `Asia/Shanghai` unless the user supplied another timezone. Record it before generating the card:
+
+```bash
+python3 scripts/manage_study_history.py record SUMMARY.json
+```
+
+Store only the structured summary, knowledge points, and mistakes—never the raw transcript or full learner answers. Retrying an equivalent summary is idempotent.
+
+When the user requests the most recent positive number of calendar days, select summaries first:
+
+```bash
+python3 scripts/manage_study_history.py recent --days N --timezone Asia/Shanghai
+```
+
+Ground the quiz only in the returned `summaries`, copy the returned `review_window` into the quiz, and state the covered date range in `source_summary`. If `summary_count` is zero, explain that no saved material exists in that range instead of inventing questions. A scheduled local task may call the same record command, but it must receive grounded study material; scheduling alone does not grant access to unrelated conversations.
 
 ## Build the question data
 
@@ -37,7 +55,7 @@ Return a short introduction followed by this content reference on its own line:
 visualize{"path":"/absolute/path/to/OUTPUT.html"}
 ```
 
-The card owns only ephemeral in-widget state. Do not save results or connect external services.
+The card owns only ephemeral answer state. The local skill may persist the minimal dated study summaries described above; do not persist raw answers, quiz progress, or transcripts, and do not connect external services.
 
 ## Follow-up rounds
 

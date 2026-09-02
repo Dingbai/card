@@ -7,5 +7,6 @@ chatgpt-app/dist/
 chatgpt-app/.env
 _workspace/tasks/.lock
 _workspace/tasks/*.tmp
+.english-review-card/
 __pycache__/
 *.py[cod]
