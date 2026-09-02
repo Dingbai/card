@@ -22,12 +22,12 @@ test("follow-up explicitly requests a new single card", () => {
 });
 
 test("uses a versioned template URI to avoid stale widget caches", () => {
-  assert.match(configSource, /APP_VERSION = "0\.8\.0"/);
-  assert.match(configSource, /PREVIOUS_APP_VERSION = "0\.7\.0"/);
+  assert.match(configSource, /APP_VERSION = "0\.9\.0"/);
+  assert.match(configSource, /PREVIOUS_APP_VERSION = "0\.8\.0"/);
   assert.match(configSource, /TOOL_NAME = "create_english_review_card_v2"/);
   assert.match(configSource, /english-review-card-v\$\{version\}\.html/);
   assert.match(appSource, /ui: \{ resourceUri: CURRENT_RESOURCE_URI \}/);
-  assert.match(widget, /Daily English Review · v0\.8\.0/);
+  assert.match(widget, /Daily English Review · v0\.9\.0/);
 });
 
 test("publishes a versioned MCP endpoint to force fresh tool discovery", () => {
@@ -54,10 +54,19 @@ test("supports keyboard progression and marks tolerated spelling", () => {
   assert.match(widget, /event\.shiftKey/);
 });
 
-test("hands ambiguous short answers to the conversation for semantic review", () => {
+test("reviews ambiguous short answers in the current card", () => {
   assert.match(widget, /Needs semantic review/);
   assert.match(widget, /grading_guidance/);
   assert.match(widget, /requestModelReview/);
+  assert.match(widget, /callTool\('review_english_answer'/);
+  assert.match(widget, /response\?\.structuredContent\?\?response/);
+  assert.match(widget, /entry\.correct=review\.verdict==='correct'/);
+  assert.match(widget, /reviewResult/);
+  assert.match(widget, /esc\(review\.explanation_en\)/);
+  assert.match(widget, /esc\(review\.explanation_zh\)/);
+  assert.match(widget, /esc\(review\.suggested_answer\)/);
+  assert.match(widget, /重试模型复核/);
+  assert.match(widget, /sendFollowUpMessage/);
   assert.match(widget, /不要生成新卡片/);
 });
 

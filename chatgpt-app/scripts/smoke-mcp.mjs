@@ -13,6 +13,9 @@ if (!endpoint) {
     const tools = await client.listTools();
     const tool = tools.tools.find((candidate) => candidate.name === "create_english_review_card_v2");
     if (!tool) throw new Error("create_english_review_card_v2 is not exposed");
+    const reviewTool = tools.tools.find((candidate) => candidate.name === "review_english_answer");
+    if (!reviewTool) throw new Error("review_english_answer is not exposed");
+    if (reviewTool.annotations?.readOnlyHint !== true) throw new Error("review_english_answer is not marked read-only");
     if ("maxItems" in (tool.inputSchema.properties?.questions ?? {})) {
       throw new Error("The deployed questions schema still has maxItems");
     }
@@ -47,6 +50,7 @@ if (!endpoint) {
       ok: true,
       endpoint,
       tool: tool.name,
+      reviewTool: reviewTool.name,
       resources: resources.resources.map((resource) => resource.uri),
       questions: result.structuredContent.questions.length,
     }, null, 2));

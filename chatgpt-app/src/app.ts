@@ -3,6 +3,7 @@ import { webcrypto } from "node:crypto";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { quizSchema } from "./quiz.js";
+import { REVIEW_TOOL_NAME, reviewEnglishAnswer, reviewInputSchema, reviewResultSchema, semanticReviewErrorMessage, type ReviewInput, type ReviewResult } from "./review.js";
 import { widgetHtml } from "./widget.js";
 import {
   APP_VERSION,
@@ -29,7 +30,7 @@ const WIDGET_CSP = {
   resourceDomains: [],
 };
 
-export function createMcpServer() {
+export function createMcpServer(options: { reviewAnswer?: (input: ReviewInput) => Promise<ReviewResult> } = {}) {
   const server = new McpServer({ name: "english-review-card", version: APP_VERSION });
   for (const uri of COMPATIBLE_RESOURCE_URIS) {
     const version = uri === CURRENT_RESOURCE_URI ? APP_VERSION : uri.match(/-v(.+)\.html$/)?.[1] ?? "compat";
@@ -65,6 +66,24 @@ export function createMcpServer() {
     content: [{ type: "text", text: `The ${quiz.questions.length}-question English review card is ready.` }],
     structuredContent: quiz,
   }));
+  server.registerTool(REVIEW_TOOL_NAME, {
+    title: "Review one English answer",
+    description: "Semantically grade one short-answer response against its question-specific guidance. This read-only tool returns a structured verdict and concise bilingual feedback and does not persist the learner answer.",
+    inputSchema: reviewInputSchema,
+    outputSchema: reviewResultSchema,
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true },
+    _meta: { "openai/widgetAccessible": true },
+  }, async (input) => {
+    try {
+      const result = await (options.reviewAnswer ?? reviewEnglishAnswer)(input);
+      return {
+        content: [{ type: "text", text: result.verdict === "correct" ? "The answer is semantically correct." : "The answer needs improvement." }],
+        structuredContent: result,
+      };
+    } catch (error) {
+      return { isError: true, content: [{ type: "text", text: semanticReviewErrorMessage(error) }] };
+    }
+  });
   return server;
 }
 

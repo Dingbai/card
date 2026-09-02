@@ -1,6 +1,6 @@
 {
   "name": "english-review-card-chatgpt-app",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -18,6 +18,7 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.30.0",
     "express": "^5.1.0",
+    "openai": "6.49.0",
     "zod": "4.4.3"
   },
   "devDependencies": {

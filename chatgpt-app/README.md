@@ -7,11 +7,11 @@
 - ChatGPT 根据当前对话中实际学习过的内容生成复习题，并调用 `create_english_review_card_v2`。默认 5 题；用户明确指定时支持任意正数题目且无上限。
 - `done`、`finished`、`学完了`、`开始复习`、`复习一下` 等明确表达可以触发卡片；单独的“复习/review”只在上下文明确要求开始卡片时触发。
 - 答题时 Enter 提交答案，反馈出现后 Enter 进入下一题；简答题使用 Shift+Enter 换行。填空题和简答题逐词拼写相似度达到 80% 时按正确计，并显示推荐拼写。
-- 新生成的简答题携带 `grading_guidance`。本地匹配无法确认的答案显示“需要语义复核”，用户可将答案和评分指导提交给当前对话中的模型判断；复核结果显示在对话中，不会静默改写已保存的卡片成绩。
+- 新生成的简答题携带 `grading_guidance`。本地匹配无法确认的答案显示“需要语义复核”；用户点击后，卡片调用只读的 `review_english_answer` 工具并在原位置显示双语判定。判为正确时会更新当前题目与总分，结果随 widget 状态恢复；不支持卡片工具调用的宿主仍降级为在对话中复核。
 - 最近 N 天卡片使用 `review_window` 显示自然日范围、时区和摘要数量。当前 Vercel MCP 不带跨聊天数据库，只能使用当前对话可见或明确提供的摘要；不要把它描述为自动读取其他聊天。完整的本地持久化由 Codex skill 的 `.english-review-card/history.jsonl` 提供。
 - MCP 服务严格校验题目结构，然后以结构化内容返回题目。
 - 交互组件在客户端完成答题、双语解析、成绩统计和错题复练，并通过组件状态恢复当前卡片和答题进度。
-- 服务端不持久化答题结果，也不需要配置 OpenAI API Key。
+- 服务端不持久化答题结果。语义复核按用户点击逐题调用 OpenAI Responses API，因此部署必须配置 `OPENAI_API_KEY`；可用 `OPENAI_REVIEW_MODEL` 覆盖默认的 `gpt-5.6-luna`。只有用户主动请求复核时才产生模型用量。
 - MCP 请求会输出 `mcp_request` 结构化耗时日志；组件控制台会输出 `english_review_card_ready` 当前卡片生成耗时。
 - 卡片生成与数据加载期间显示占位状态；标题下方只显示当前卡片自身的生成耗时，不累计加载时间或其他卡片的时间。
 
@@ -30,7 +30,7 @@ MCP 端点为 `http://localhost:8787/mcp`，健康检查端点为 `http://localh
 ## 私有部署
 
 1. 在 Vercel 中导入 GitHub 仓库，并将 Root Directory 设置为 `chatgpt-app`。
-2. 保持 Framework Preset 为 Other，不需要配置环境变量。
+2. 保持 Framework Preset 为 Other，并配置敏感环境变量 `OPENAI_API_KEY`。如需覆盖默认低延迟模型，再设置 `OPENAI_REVIEW_MODEL`。
 3. 确认访问 `https://你的域名/api/health` 时返回版本、工具名、当前资源 URI 和兼容资源 URI；不要只检查 `ok`。
 4. 对已部署端点运行 `npm run smoke -- https://你的域名/api/mcp-v2`。脚本会依次初始化 MCP、检查工具 schema、列出并读取当前及上一版资源，再单次调用 v2 工具验证 10 题返回。
 5. 删除 ChatGPT 中指向旧 `/api/mcp` 的连接，再以 `https://你的域名/api/mcp-v2` 新建私有远程 MCP App。新 URL 用于强制重新发现工具目录。
@@ -49,9 +49,9 @@ This directory contains a remote MCP server and an Apps SDK widget. It is separa
 ## Behavior
 
 - ChatGPT creates grounded questions from the current conversation and calls `create_english_review_card_v2`. It defaults to five, while explicit positive counts have no maximum.
-- The MCP server validates the quiz and returns it as structured content.
+- The MCP server validates the quiz and returns it as structured content. Ambiguous short answers can call the read-only `review_english_answer` tool and render its structured bilingual verdict in the current card.
 - The widget handles answers, bilingual feedback, scoring, and follow-up rounds locally, and restores the current card and progress from widget state.
-- No quiz results are persisted on the server, and no OpenAI API key is required by the server.
+- No quiz results are persisted on the server. Semantic review requires `OPENAI_API_KEY` and uses the Responses API only after a learner clicks the review button. `OPENAI_REVIEW_MODEL` can override the default `gpt-5.6-luna` model.
 - MCP requests emit structured `mcp_request` timing logs; the widget console emits the current card's generation time through `english_review_card_ready`.
 - The card shows placeholders while generation and card data are loading. Below its title it displays only the current card's own generation time, without adding load time or timing from other cards.
 
@@ -73,7 +73,7 @@ Production deployment is owned by `.github/workflows/ci-cd.yml`. Pull requests t
 
 Initial setup:
 
-1. Create or import the Vercel project with Root Directory `chatgpt-app` and Framework Preset `Other`. No application environment variables are required.
+1. Create or import the Vercel project with Root Directory `chatgpt-app` and Framework Preset `Other`. Add `OPENAI_API_KEY` as a sensitive environment variable; optionally set `OPENAI_REVIEW_MODEL` to override `gpt-5.6-luna`.
 2. Create a GitHub environment named `production`. Add `VERCEL_TOKEN` as an environment secret and add `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, and `PRODUCTION_URL` as environment variables. `PRODUCTION_URL` must be the stable production origin, for example `https://cards.example.com`, without an endpoint path.
 3. Leave Git integration available for pull-request previews if desired. `vercel.json` disables Git-triggered deployments for `main`, because GitHub Actions is the sole Production deployer.
 4. Protect `main` and require the `Verify both review-card surfaces` check before merging.

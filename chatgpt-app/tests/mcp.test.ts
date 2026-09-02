@@ -8,6 +8,7 @@ import {
   TOOL_NAME,
   createMcpServer,
 } from "../src/app.js";
+import { REVIEW_TOOL_NAME } from "../src/review.js";
 
 function tenQuestionQuiz() {
   return {
@@ -97,6 +98,56 @@ test("creates all ten requested questions in one v2 tool call", async () => {
     const tools = await client.listTools();
     const tool = tools.tools.find((candidate) => candidate.name === TOOL_NAME);
     assert.equal(tool?._meta?.["openai/outputTemplate"], CURRENT_RESOURCE_URI);
+  } finally {
+    await client.close();
+    await server.close();
+  }
+});
+
+test("exposes a widget-callable read-only semantic review tool", async () => {
+  const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+  const server = createMcpServer({ reviewAnswer: async (input) => ({
+    question_id: input.question_id,
+    verdict: "correct",
+    explanation_en: "The answer has the required meaning.",
+    explanation_zh: "答案表达了要求的含义。",
+  }) });
+  const client = new Client({ name: "review-card-test", version: "1.0.0" });
+  await Promise.all([server.connect(serverTransport), client.connect(clientTransport)]);
+  try {
+    const tools = await client.listTools();
+    const tool = tools.tools.find((candidate) => candidate.name === REVIEW_TOOL_NAME);
+    assert.equal(tool?.annotations?.readOnlyHint, true);
+    assert.equal(tool?._meta?.["openai/widgetAccessible"], true);
+    assert.equal(tool?._meta?.["openai/outputTemplate"], undefined);
+    const response = await client.callTool({ name: REVIEW_TOOL_NAME, arguments: {
+      question_id: "q3", prompt: "Make a polite request.", knowledge_point: "polite requests",
+      grading_guidance: "Accept equivalent polite requests.", learner_answer: "Would you mind helping me?",
+      accepted_answers: ["Could you help me, please?"],
+    } });
+    assert.equal(response.isError, undefined);
+    assert.equal((response.structuredContent as { verdict?: string })?.verdict, "correct");
+  } finally {
+    await client.close();
+    await server.close();
+  }
+});
+
+test("returns semantic review provider failures as MCP tool errors", async () => {
+  const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+  const server = createMcpServer({ reviewAnswer: async () => { throw new Error("Semantic review is temporarily unavailable."); } });
+  const client = new Client({ name: "review-card-test", version: "1.0.0" });
+  await Promise.all([server.connect(serverTransport), client.connect(clientTransport)]);
+  try {
+    const response = await client.callTool({ name: REVIEW_TOOL_NAME, arguments: {
+      question_id: "q3", prompt: "Make a polite request.", knowledge_point: "polite requests",
+      grading_guidance: "Accept equivalent polite requests.", learner_answer: "Please help.",
+      accepted_answers: ["Could you help me, please?"],
+    } });
+    assert.equal(response.isError, true);
+    assert.equal(response.structuredContent, undefined);
+    const content = response.content as Array<{ type: string; text?: string }>;
+    assert.equal(content[0]?.text, "Semantic review is temporarily unavailable. Please retry.");
   } finally {
     await client.close();
     await server.close();
